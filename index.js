@@ -58,7 +58,6 @@ RedisContextStore.prototype.get = function (scope, key, callback) {
 };
 
 RedisContextStore.prototype.set = function (scope, key, value, callback) {
-    console.log(scope,key,value,callback)
     const prefixedScope = this.getPrefixedScope(scope);
     const data = {};
 
