@@ -7,10 +7,10 @@ var RedisContextStore = function (config) {
 
 RedisContextStore.prototype.open = function () {
     return new Promise((resolve, reject) => {
-        var redisURL = "redis://"+this.config.host+":"+this.config.port
+        var redisURL = "redis://"+this.config.host+":"+this.config.port+"/"+this.config.db
 
         if (this.config.password !== undefined && this.config.username !== undefined && this.config.username.length > 0 ) {
-            redisURL = "redis://"+this.config.username+":"+this.config.password+"@"+this.config.host+":"+this.config.port
+            redisURL = "redis://"+this.config.username+":"+this.config.password+"@"+this.config.host+":"+this.config.port+"/"+this.config.db
         }
 
         this.client = redis.createClient({url: redisURL});
