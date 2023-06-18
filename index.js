@@ -8,11 +8,17 @@ var RedisContextStore = function (config) {
 RedisContextStore.prototype.open = function () {
     return new Promise((resolve, reject) => {
         this.client = redis.createClient(this.config.port, this.config.host);
-        this.client.on("ready", resolve);
+        (async () => {
+            await this.client.connect();
+        })();
+        this.client.on('connect', () => { console.log('Redis Client Connected'); resolve; });
+        this.client.on('error', (err) => { console.log('Redis Client Connection Error', err); reject; });
         this.client.on("error", reject);
+        this.client.on('ready', resolve);
         this.client.select(this.config.db);
     });
 };
+
 
 RedisContextStore.prototype.close = function () {
     return new Promise((resolve, reject) => {
