@@ -128,8 +128,20 @@ Other Redis client(e.g. redis-cli) can get the value stored by Node-RED like fol
 Node-RED
 
 ```javascript
-global.set("foo","bar","redis");
-global.set("obj",{key:"value"},"redis");
+global.set("foo","bar");
+global.set("obj",{key:"value"});
+
+flow.set("name","alice")
+await flow.get("name")
+
+msg.payload = {}
+global.set("fookey","globalfooval")
+flow.set("fookey","flowfooval")
+msg.payload.fookey = await global.get("fookey")
+msg.payload.flowfookey = await flow.get("fookey")
+console.log(await global.get("fookey"))
+console.log(await flow.get("fookey"))
+return msg;
 ```
 
 redis-cli
