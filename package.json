@@ -4,7 +4,7 @@
   "description": "node red custom context storage for the redis.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/siprtcio/node-red-contrib-context-redis#readme",
   "dependencies": {
+    "jest": "^29.5.0",
     "redis": "^4.6.7"
   }
 }
