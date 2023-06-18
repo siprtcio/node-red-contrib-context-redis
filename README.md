@@ -25,7 +25,6 @@ contextStorage: {
     }
 }
 ```
-
 ### Options
 
 This plugin exposes some options defined in [node_redis](https://github.com/NodeRedis/node_redis) as itself options.
@@ -37,10 +36,29 @@ It needs following configuration options:
 | port           | The port of the Redis server.          `Default: 6379`                                                      |
 | db             | The Redis logical database to connect. `Default: 0`                                                         |
 | prefix         | If set, the string used to prefix all used keys.                                                            |
+| username       | If set, the plugin will run Redis AUTH command on connect. *Note: the username will be sent as plaintext.*  |
 | password       | If set, the plugin will run Redis AUTH command on connect. *Note: the password will be sent as plaintext.*  |
 
 see https://github.com/NodeRedis/node_redis#options-object-properties
 
+### Example 
+
+```javascript
+        contextStorage: {
+            custom: {
+                module: require("node-red-contrib-context-redis"),
+                config: {
+                    prefix: process.env.APP_NAME || "appname",
+                    host: process.env.REDIS_HOST || "localhost",
+                    port: process.env.REDIS_PORT || 6379,
+                    db: process.env.REDIS_DB || 0,
+                    username: process.env.REDIS_USERNAME || "",
+                    password: process.env.REDIS_PASSWORD || "",
+                    // see below options
+                }
+            }
+        },
+```
 ## Data Model
 
 ```text
