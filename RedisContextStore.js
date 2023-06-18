@@ -11,11 +11,13 @@ RedisContextStore.prototype.open = function () {
         (async () => {
             await this.client.connect();
         })();
-        this.client.on('connect', () => { console.log('Redis Client Connected'); resolve; });
+        this.client.on('connect', async () => {
+            console.log('Redis Client Connected'); 
+            await this.client.select(this.config.db);
+        });
         this.client.on('error', (err) => { console.log('Redis Client Connection Error', err); reject; });
         this.client.on("error", reject);
         this.client.on('ready', resolve);
-        this.client.select(this.config.db);
     });
 };
 
