@@ -17,7 +17,7 @@ To run this you need a Redis server running. For details see <a href="http://red
 
 ```javascript
 contextStorage: {
-    redis: {
+    custom: {
         module: require("node-red-contrib-context-redis"),
         config: {
             // see below options
