@@ -73,6 +73,7 @@ RedisContextStore.prototype.get = async function (scope, key, callback) {
 
 RedisContextStore.prototype.set = async function (scope, key, value, callback) {
     const prefixedScope = this.getPrefixedScope(scope);
+
     const data = {};
 
     if (value===undefined){
@@ -83,12 +84,39 @@ RedisContextStore.prototype.set = async function (scope, key, value, callback) {
         return 
     }
 
-    if (Array.isArray(key)) {
-        key.forEach((k, i) => {
-            data[k] = JSON.stringify(value[i]);
-        });
+     // Check if the key is a nested object
+    const nestedKeys = key.split('.');
+    if (nestedKeys.length > 1) {
+        const nestedKey = nestedKeys.shift();
+        const nestedData = await this.client.HGET(prefixedScope, nestedKey);
+        const parsedData = JSON.parse(nestedData || '{}');
+
+        let nestedValue = parsedData;
+        let undefinedKey;
+        for (const k of nestedKeys) {
+            nestedValue = nestedValue[k];
+            if (nestedValue === undefined) {
+                undefinedKey = k;
+                break;
+            }
+        }
+
+        if (nestedValue !== undefined) {
+            nestedValue = value;
+            parsedData[nestedKeys[nestedKeys.length - 1]] = nestedValue;
+            data[nestedKey] = JSON.stringify(parsedData);
+        }else{
+            parsedData[undefinedKey] = value;
+            data[nestedKey] = JSON.stringify(parsedData);
+        }
     } else {
-        data[key] = JSON.stringify(value);
+        if (Array.isArray(key)) {
+            key.forEach((k, i) => {
+                data[k] = JSON.stringify(value[i]);
+            });
+        } else {
+            data[key] = JSON.stringify(value);
+        }
     }
 
     if (callback) {
